@@ -2,6 +2,7 @@
 /** @type {import('cz-git').UserConfig} */
 // eslint-disable-next-line no-undef
 module.exports = {
+    extends: ['@commitlint/config-conventional'],
     rules: {
         // @see: https://commitlint.js.org/#/reference-rules
     },

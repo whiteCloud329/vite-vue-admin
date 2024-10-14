@@ -10,6 +10,9 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default [
     {
+        ignores: ['**/node_modules', '**/dist', '**/output'],
+    },
+    {
         files: ['**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}'],
         rules: {
             // 缩进4个空格
