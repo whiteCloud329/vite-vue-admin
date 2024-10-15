@@ -16,11 +16,9 @@ export default [
         files: ['**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}'],
         rules: {
             // 缩进4个空格
-            'indent': [0, 4],
-            'semi': [2, 'never'],
-            'camelcase': 0,
-            '@typescript-eslint/no-explicit-any': 0,
-            'no-console': 2,
+            indent: [0, 4],
+            semi: [2, 'never'],
+            camelcase: 0,
         },
         languageOptions: {
             parser: vueParser, // 使用vue解析器，这个可以识别vue文件
@@ -62,8 +60,6 @@ export default [
     eslintPluginPrettierRecommended,
     {
         rules: {
-            // override/add rules settings here, such as:
-            // 'vue/no-unused-vars': 'errorView',
             'prettier/prettier': [
                 'error',
                 {
@@ -71,8 +67,10 @@ export default [
                     semi: false,
                 },
             ],
-            '@typescript-eslint/no-explicit-any': 1,
+            'no-console': 'error', // 关闭console提示
             'vue/valid-template-root': 0,
+            '@typescript-eslint/no-unused-vars': 'error', // 变量未使用
+            '@typescript-eslint/no-explicit-any': 'off', // ts any声明禁止
         },
     },
 ]
