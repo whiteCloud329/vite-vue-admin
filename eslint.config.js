@@ -16,9 +16,11 @@ export default [
         files: ['**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}'],
         rules: {
             // 缩进4个空格
-            indent: [0, 4],
-            semi: [2, 'never'],
-            camelcase: 0,
+            'indent': [0, 4],
+            'semi': [2, 'never'],
+            'camelcase': 0,
+            '@typescript-eslint/no-explicit-any': 0,
+            'no-console': 2,
         },
         languageOptions: {
             parser: vueParser, // 使用vue解析器，这个可以识别vue文件

@@ -43,24 +43,5 @@
         "typescript-eslint": "^8.8.1",
         "vite": "^5.4.8",
         "vue-tsc": "^2.1.6"
-    },
-    "config": {
-        "commitizen": {
-            "path": "node_modules/cz-git"
-        }
-    },
-    "lint-staged": {
-        "src/**/*.{vue,js,jsx,cjs,mjs,ts,tsx,cts,mts}": "eslint",
-        "**/*.{js,ts,vue}": [
-            "prettier --write --ignore-unknown"
-        ],
-        "**/*.{ts,tsx}": [
-            "jest --bail"
-        ]
-    },
-    "husky": {
-        "hooks": {
-            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-        }
     }
 }
