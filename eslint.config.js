@@ -70,7 +70,7 @@ export default [
             'no-console': 'error', // 关闭console提示
             'vue/valid-template-root': 0,
             '@typescript-eslint/no-unused-vars': 'error', // 变量未使用
-            '@typescript-eslint/no-explicit-any': 'off', // ts any声明禁止
+            '@typescript-eslint/no-explicit-any': 'error', // ts any声明禁止
         },
     },
 ]

@@ -1,3 +1,4 @@
+import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -8,7 +9,7 @@ function pathResolver(dir: string) {
 }
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue(), vueDevTools()],
+    plugins: [vue(), vueDevTools(), UnoCSS()],
     resolve: {
         alias: [
             {
@@ -20,5 +21,10 @@ export default defineConfig({
                 replacement: pathResolver('/src/views'),
             },
         ],
+    },
+    server: {
+        hmr: true,
+        open: true,
+        port: 9529,
     },
 })

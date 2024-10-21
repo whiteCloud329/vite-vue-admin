@@ -1,13 +1,18 @@
 import { createApp } from 'vue'
 import './style.css'
-import App from './App.vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import 'virtual:uno.css'
+import '@unocss/reset/normalize.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
+import App from './App.vue'
 const app = createApp(App)
 
-import router from './router'
+app.use(ElementPlus)
 
+import router from './router'
 app.use(router)
 
 const pinia = createPinia()
