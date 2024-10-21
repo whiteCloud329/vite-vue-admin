@@ -4,9 +4,11 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { resolve } from 'node:path'
 import * as process from 'process'
+
 function pathResolver(dir: string) {
     return resolve(process.cwd(), '.', dir)
 }
+
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [vue(), vueDevTools(), UnoCSS()],
@@ -21,6 +23,13 @@ export default defineConfig({
                 replacement: pathResolver('/src/views'),
             },
         ],
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler', // or 'modern'
+            },
+        },
     },
     server: {
         hmr: true,
