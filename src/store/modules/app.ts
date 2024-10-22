@@ -1,7 +1,22 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive } from 'vue'
+
+interface appStateType {
+    isCollapse: boolean
+}
 
 export const useAppStore = defineStore('appStore', () => {
-    const isCollapse = ref(false) // 是否折叠面板
-    return { isCollapse }
+    // 侧边栏是否折叠
+    const appState = reactive<appStateType>({
+        isCollapse: false,
+    })
+
+    const toggleCollapse = () => {
+        appState.isCollapse = !appState.isCollapse
+    }
+
+    return {
+        appState,
+        toggleCollapse,
+    }
 })

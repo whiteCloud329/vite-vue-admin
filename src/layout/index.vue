@@ -1,7 +1,7 @@
 <template>
     <div class="ly-container">
         <ly-header></ly-header>
-        <div class="ly-main">
+        <div class="ly-container-main">
             <ly-aside></ly-aside>
             <ly-main></ly-main>
         </div>
@@ -19,7 +19,7 @@ defineOptions({ name: 'lyLayout' })
     width: 100%;
     height: 100vh;
 
-    .ly-main {
+    &-main {
         display: flex;
     }
 }

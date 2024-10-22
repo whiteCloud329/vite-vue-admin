@@ -2,7 +2,7 @@ import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tsEslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
-import stylistic from '@stylistic/eslint-plugin'
+// import stylistic from '@stylistic/eslint-plugin'
 // vue文件解析器
 import vueParser from 'vue-eslint-parser'
 // import eslintConfigPrettier from 'eslint-config-prettier'
@@ -34,15 +34,15 @@ export default [
     ...tsEslint.configs.recommended,
     ...pluginVue.configs['flat/essential'],
     // ...stylistic.configs['recommended-flat'],
-    stylistic.configs.customize({
-        'indent': 4,
-        'quotes': 'single',
-        'semi': false,
-        'jsx': true,
-        'braceStyle': '1tbs',
-        'arrowParens': 'always',
-        'declaration-block-trailing-semicolon': null,
-    }),
+    // stylistic.configs.customize({
+    //     'indent': 4,
+    //     // 'quotes': 'single',
+    //     'semi': false,
+    //     'jsx': true,
+    //     'braceStyle': '1tbs',
+    //     // 'arrowParens': 'always',
+    //     'declaration-block-trailing-semicolon': null,
+    // }),
     // {
     //     files: ['**/*.vue'],
     //     languageOptions: {
@@ -67,7 +67,7 @@ export default [
                     semi: false,
                 },
             ],
-            'no-console': 'error', // 关闭console提示
+            'no-console': 'off', // 关闭console提示
             'vue/valid-template-root': 0,
             '@typescript-eslint/no-unused-vars': 'error', // 变量未使用
             '@typescript-eslint/no-explicit-any': 'error', // ts any声明禁止
