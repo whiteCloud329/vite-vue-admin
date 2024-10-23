@@ -48,6 +48,9 @@ importers:
       '@eslint/js':
         specifier: ^9.12.0
         version: 9.12.0
+      '@imengyu/vue3-context-menu':
+        specifier: ^1.4.3
+        version: 1.4.3
       '@ls-lint/ls-lint':
         specifier: ^2.2.3
         version: 2.2.3
@@ -693,6 +696,9 @@ packages:
 
   '@iconify/utils@2.1.33':
     resolution: {integrity: sha512-jP9h6v/g0BIZx0p7XGJJVtkVnydtbgTgt9mVNcGDYwaa7UhdHdI9dvoq+gKj9sijMSJKxUPEG2JyjsgXjxL7Kw==}
+
+  '@imengyu/vue3-context-menu@1.4.3':
+    resolution: {integrity: sha512-W2rT+xllLSg+u/Z36jE+mrjzO8gCIw0YDDyBxywuASmwrBotU4deftW8Zz9GK/QEHBRNyV5nBINZJo2J257Wlg==}
 
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -3585,6 +3591,8 @@ snapshots:
       mlly: 1.7.2
     transitivePeerDependencies:
       - supports-color
+
+  '@imengyu/vue3-context-menu@1.4.3': {}
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:

@@ -36,6 +36,22 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            path: '/demo1',
+            name: 'Demo1View',
+            component: lyLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'ly-demo1',
+                    meta: {
+                        title: 'demo1页',
+                        code: 'ly-demo1',
+                    },
+                    component: () => import('@/views/demo1.vue'),
+                },
+            ],
+        },
     ],
     history: createWebHistory(),
 })

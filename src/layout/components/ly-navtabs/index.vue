@@ -16,16 +16,48 @@
                 :name="tab.path"
                 :closable="tab.path !== '/'"
             >
-                <!--                @click.right.prevent="openContextMenu($event, tab)"-->
-                <!--                @contextmenu.prevent="openContextMenu($event, tab)"-->
                 <template #label>
-                    {{ tab.title }}
-                    <el-icon>
-                        <Refresh />
-                    </el-icon>
+                    <div @contextmenu="onContextMenu">{{ tab.title }}</div>
                 </template>
             </el-tab-pane>
             <template #add-icon>
+                <el-dropdown
+                    placement="bottom-end"
+                    size="small"
+                    trigger="click"
+                >
+                    <el-button size="small">
+                        <el-icon>
+                            <MoreFilled />
+                        </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                        <el-scrollbar class="right-dropdown">
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="closeAllTabs">
+                                    <div class="dropdown-item">关闭所有</div>
+                                </el-dropdown-item>
+                                <template v-for="tab of tabs" :key="tab.path">
+                                    <el-dropdown-item
+                                        @click="handleTabClick(tab)"
+                                    >
+                                        <div class="dropdown-item">
+                                            {{ tab.title }}
+                                        </div>
+                                        <el-icon
+                                            v-if="tab.path !== '/'"
+                                            class="dropdown-item-close"
+                                            @click.stop="closeSelectedTab(tab)"
+                                        >
+                                            <CloseBold />
+                                        </el-icon>
+                                    </el-dropdown-item>
+                                </template>
+                            </el-dropdown-menu>
+                        </el-scrollbar>
+                    </template>
+                </el-dropdown>
+
                 <el-popover
                     ref="tabsPopover"
                     placement="bottom-end"
@@ -51,67 +83,40 @@
                             >
                                 关闭所有
                             </li>
-                            <!--                            <li-->
-                            <!--                                class="nav-item"-->
-                            <!--                                v-for="tab of tabs"-->
-                            <!--                                :key="tab.path"-->
-                            <!--                                :class="{ active: tab.path === activeTab }"-->
-                            <!--                            >-->
-                            <!--                                <a-->
-                            <!--                                    class="item-text f-toe1"-->
-                            <!--                                    @click="handleTabClick(tab.name)"-->
-                            <!--                                    >{{ tab.title }}</a-->
-                            <!--                                >-->
-                            <!--                                <i-->
-                            <!--                                    class="item-icon el-icon-close"-->
-                            <!--                                    v-if="!tab.closable"-->
-                            <!--                                    @click="removeTab(tab.path)"-->
-                            <!--                                ></i>-->
-                            <!--                            </li>-->
+                            <li
+                                class="nav-item"
+                                v-for="tab of tabs"
+                                :key="tab.path"
+                                :class="{ active: tab.path === activeTab }"
+                            >
+                                <router-link
+                                    :to="tab.path"
+                                    class="item-text f-toe1"
+                                    >{{ tab.title }}
+                                </router-link>
+                                <el-icon
+                                    v-if="tab.path !== '/'"
+                                    @click="removeTab(tab.path)"
+                                >
+                                    <CloseBold></CloseBold>
+                                </el-icon>
+                            </li>
                         </ul>
                     </el-scrollbar>
                 </el-popover>
             </template>
         </el-tabs>
-
-        <!-- 右键菜单（Element Plus 的 ElDropdown） -->
-        <el-dropdown
-            v-if="contextMenu.visible"
-            :style="{
-                top: `${contextMenu.y}px`,
-                left: `${contextMenu.x}px`,
-                position: 'fixed',
-            }"
-            @clickoutside="contextMenu.visible = false"
-        >
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item
-                        @click="closeCurrentTab"
-                        :disabled="contextMenu.targetTab === '/'"
-                    >
-                        关闭当前
-                    </el-dropdown-item>
-                    <el-dropdown-item @click="closeOtherTabs"
-                        >关闭其他
-                    </el-dropdown-item>
-                    <el-dropdown-item @click="closeAllTabs"
-                        >关闭所有
-                    </el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
     </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useTabsStore } from '@/store/modules/tabs.ts'
+import { computed } from 'vue'
+import { TabType, useTabsStore } from '@/store/modules/tabs.ts'
 import { useRouter } from 'vue-router'
-import { MoreFilled, Refresh } from '@element-plus/icons-vue'
+import { CloseBold, MoreFilled } from '@element-plus/icons-vue'
+import ContextMenu from '@imengyu/vue3-context-menu'
 
 const tabsStore = useTabsStore()
 const router = useRouter()
-const contextMenu = ref({ visible: false, x: 0, y: 0, targetTab: null })
 
 defineOptions({ name: 'lyNavTabs' })
 const activeTab = computed({
@@ -121,47 +126,60 @@ const activeTab = computed({
 const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
-const handleTabClick = (tab: { name: string }) => {
-    router.push({ path: tab.name })
+const handleTabClick = (tab: TabType) => {
+    router.push({ path: tab.path })
 }
 
 // 删除标签页
 const removeTab = (path: string) => {
     tabsStore.removeTab(path)
-    router.push(tabsStore.activeTab || '/')
+    router.push(activeTab.value || '/')
 }
 // 打开右键菜单
-// const openContextMenu = (event: MouseEvent, tab: { path: never }) => {
-//     console.log('openContextMenu', '111')
-//     contextMenu.value = {
-//         visible: true,
-//         x: event.clientX,
-//         y: event.clientY,
-//         targetTab: tab['path'],
-//     }
+const onContextMenu = (e: MouseEvent) => {
+    //prevent the browser's default menu
+    e.preventDefault()
+    //show your menu
+    ContextMenu.showContextMenu({
+        x: e.x,
+        y: e.y,
+        items: [
+            {
+                label: '刷新',
+                icon: 'refresh',
+                onClick: () => {
+                    location.reload()
+                },
+            },
+            {
+                label: '关闭其他',
+                onClick: () => {
+                    closeOtherTabs()
+                },
+            },
+        ],
+    })
+}
+
+// // 关闭当前标签页
+// const closeCurrentTab = () => {
+//     removeTab(activeTab.value)
 // }
 
-// 关闭当前标签页
-const closeCurrentTab = () => {
-    if (contextMenu.value.targetTab) {
-        removeTab(contextMenu.value.targetTab)
-        contextMenu.value.visible = false
-    }
+// 关闭选中标签页
+const closeSelectedTab = (tab: TabType) => {
+    console.log(tab)
+    removeTab(tab.path)
 }
 
 // 关闭其他标签页
 const closeOtherTabs = () => {
-    if (contextMenu.value.targetTab) {
-        tabsStore.closeOtherTabs(contextMenu.value.targetTab)
-        contextMenu.value.visible = false
-        router.push(contextMenu.value.targetTab)
-    }
+    tabsStore.closeOtherTabs(activeTab.value)
 }
 
 // 关闭所有标签页
 const closeAllTabs = () => {
     tabsStore.closeAllTabs()
-    contextMenu.value.visible = false
     router.push('/')
 }
 </script>
@@ -179,25 +197,28 @@ const closeAllTabs = () => {
             margin-right: 5px;
         }
     }
+}
 
-    .nav-tabs--extra {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        line-height: 36px;
+.right-dropdown {
+    width: 200px;
+    max-height: 260px;
 
-        & > span:nth-child(1) {
-            display: block;
-            height: 32px;
-        }
+    .dropdown-item {
+        width: 190px;
+        text-align: center;
+        height: 32px;
+        line-height: 32px;
+        font-size: 14px;
+        font-weight: bold;
+    }
 
-        .list-btn {
-            display: inline-block;
-            height: 24px;
-            width: 20px;
-            margin-top: 4px;
-            background-image: url('~@/assets/tabs-more.png');
-            background-size: cover;
+    .dropdown-item-close {
+        display: none !important;
+    }
+
+    :deep .el-dropdown-menu__item:hover {
+        .dropdown-item-close {
+            display: block !important;
         }
     }
 }
@@ -262,13 +283,5 @@ const closeAllTabs = () => {
 :deep .el-tabs__nav .el-tabs__item:hover {
     color: #666666;
     background: #dddddd;
-}
-
-:deep .context-menu {
-    position: fixed;
-    background-color: white;
-    border: 1px solid #ccc;
-    z-index: 1000;
-    padding: 10px;
 }
 </style>

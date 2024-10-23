@@ -4,7 +4,7 @@ import { LocationQuery, RouteLocationNormalized } from 'vue-router'
 
 // 定义 Tab 类型
 
-interface Tab {
+export interface TabType {
     title: string
     path: string // 与路由 path 绑定
     name?: string // 路由的 name
@@ -14,19 +14,19 @@ interface Tab {
 export const useTabsStore = defineStore(
     'tabsStore',
     () => {
-        const defaultTab: Tab = {
+        const defaultTab: TabType = {
             title: '首页', // 默认首页标题
             path: '/', // 默认首页路径
         }
 
-        const tabs = ref<Tab[]>(
+        const tabs = ref<TabType[]>(
             JSON.parse(localStorage.getItem('tabs') || '[]'),
         ) // 页面刷新后从 localStorage 恢复 tabs
         const activeTab = ref(localStorage.getItem('activeTab') || '/') // 默认激活的标签
 
         // 添加或激活标签页
         const addTab = (route: RouteLocationNormalized) => {
-            const tab: Tab = {
+            const tab: TabType = {
                 title: route.meta.title as string, // 从路由元数据获取标题
                 path: route.path,
                 name: route.name as string,
