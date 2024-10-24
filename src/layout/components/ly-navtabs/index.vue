@@ -17,7 +17,13 @@
                 :closable="tab.path !== '/'"
             >
                 <template #label>
-                    <div @contextmenu="onContextMenu">{{ tab.title }}</div>
+                    <div
+                        class="w-100%"
+                        @contextmenu="onContextMenu($event, tab.path)"
+                        :ref="tab.path"
+                    >
+                        {{ tab.title }}
+                    </div>
                 </template>
             </el-tab-pane>
             <template #add-icon>
@@ -26,11 +32,9 @@
                     size="small"
                     trigger="click"
                 >
-                    <el-button size="small">
-                        <el-icon>
-                            <MoreFilled />
-                        </el-icon>
-                    </el-button>
+                    <el-icon>
+                        <MoreFilled />
+                    </el-icon>
                     <template #dropdown>
                         <el-scrollbar class="right-dropdown">
                             <el-dropdown-menu>
@@ -39,7 +43,7 @@
                                 </el-dropdown-item>
                                 <template v-for="tab of tabs" :key="tab.path">
                                     <el-dropdown-item
-                                        @click="handleTabClick(tab)"
+                                        @click="handleTabClick1(tab)"
                                     >
                                         <div class="dropdown-item">
                                             {{ tab.title }}
@@ -57,53 +61,6 @@
                         </el-scrollbar>
                     </template>
                 </el-dropdown>
-
-                <el-popover
-                    ref="tabsPopover"
-                    placement="bottom-end"
-                    :width="200"
-                    popper-class="popover__nav-list"
-                >
-                    <template v-slot:reference>
-                        <div class="p-l-10 p-r-10">
-                            <el-icon>
-                                <MoreFilled />
-                            </el-icon>
-                        </div>
-                    </template>
-                    <el-scrollbar
-                        class="scrollbar__nav-list"
-                        wrap-class="scrollbar-wrap__nav-list"
-                        view-class="scrollbar-view__nav-list"
-                    >
-                        <ul class="nav-list">
-                            <li
-                                class="nav-item close-all"
-                                @click="closeAllTabs"
-                            >
-                                关闭所有
-                            </li>
-                            <li
-                                class="nav-item"
-                                v-for="tab of tabs"
-                                :key="tab.path"
-                                :class="{ active: tab.path === activeTab }"
-                            >
-                                <router-link
-                                    :to="tab.path"
-                                    class="item-text f-toe1"
-                                    >{{ tab.title }}
-                                </router-link>
-                                <el-icon
-                                    v-if="tab.path !== '/'"
-                                    @click="removeTab(tab.path)"
-                                >
-                                    <CloseBold></CloseBold>
-                                </el-icon>
-                            </li>
-                        </ul>
-                    </el-scrollbar>
-                </el-popover>
             </template>
         </el-tabs>
     </div>
@@ -114,6 +71,7 @@ import { TabType, useTabsStore } from '@/store/modules/tabs.ts'
 import { useRouter } from 'vue-router'
 import { CloseBold, MoreFilled } from '@element-plus/icons-vue'
 import ContextMenu from '@imengyu/vue3-context-menu'
+import { TabsPaneContext } from 'element-plus'
 
 const tabsStore = useTabsStore()
 const router = useRouter()
@@ -126,39 +84,61 @@ const activeTab = computed({
 const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
-const handleTabClick = (tab: TabType) => {
-    router.push({ path: tab.path })
+const handleTabClick = (pane: TabsPaneContext) => {
+    // console.log(pane.paneName, ev)
+    router.push({ path: (pane.paneName || '').toString() })
 }
 
+// 点击标签页时切换路由
+const handleTabClick1 = (tab: { path: string }) => {
+    // console.log(pane.paneName, ev)
+    router.push({ path: tab.path })
+}
 // 删除标签页
 const removeTab = (path: string) => {
     tabsStore.removeTab(path)
     router.push(activeTab.value || '/')
 }
 // 打开右键菜单
-const onContextMenu = (e: MouseEvent) => {
+const onContextMenu = (e: MouseEvent, path: string) => {
     //prevent the browser's default menu
     e.preventDefault()
-    //show your menu
-    ContextMenu.showContextMenu({
-        x: e.x,
-        y: e.y,
-        items: [
-            {
-                label: '刷新',
-                icon: 'refresh',
-                onClick: () => {
-                    location.reload()
+    if (path === activeTab.value) {
+        //show your menu
+        ContextMenu.showContextMenu({
+            x: e.x - e.layerX + 25,
+            y: e.y - e.layerY + 32,
+            items: [
+                {
+                    label: '刷新',
+                    onClick: () => {
+                        location.reload()
+                    },
                 },
-            },
-            {
-                label: '关闭其他',
-                onClick: () => {
-                    closeOtherTabs()
+                {
+                    label: '关闭其他',
+                    onClick: () => {
+                        closeOtherTabs()
+                    },
                 },
-            },
-        ],
-    })
+            ],
+        })
+    } else {
+        ContextMenu.showContextMenu({
+            x: e.x,
+            y: e.y,
+            items: [
+                {
+                    label: '关闭',
+                    onClick: () => {
+                        closeSelectedTab(
+                            tabs.value.find((tab) => tab.path === path)!,
+                        )
+                    },
+                },
+            ],
+        })
+    }
 }
 
 // // 关闭当前标签页
@@ -216,30 +196,30 @@ const closeAllTabs = () => {
         display: none !important;
     }
 
-    :deep .el-dropdown-menu__item:hover {
+    :deep(.el-dropdown-menu__item:hover) {
         .dropdown-item-close {
             display: block !important;
         }
     }
 }
 
-:deep .el-tabs__nav {
+:deep(.el-tabs__nav) {
     display: flex;
     overflow-x: auto;
     white-space: nowrap;
     border: 0 !important;
 }
 
-:deep .el-tabs__header {
+:deep(.el-tabs__header) {
     border: 0;
 }
 
-:deep .el-tabs__content {
+:deep(.el-tabs__content) {
     display: none;
 }
 
-:deep .el-tabs__nav .el-tabs__item {
-    width: 160px;
+:deep(.el-tabs__nav .el-tabs__item) {
+    width: 180px;
     line-height: 32px;
     height: 32px;
     color: #999;
@@ -267,20 +247,20 @@ const closeAllTabs = () => {
     }
 }
 
-:deep .el-tabs__nav .el-tabs__item.is-active {
+:deep(.el-tabs__nav .el-tabs__item.is-active) {
     width: 190px;
     color: #333333;
     background: #ffffff;
-    padding-right: 54px !important;
+    padding-right: 20px !important;
     padding-left: 0 !important;
 }
 
-:deep .el-tabs__nav .el-tabs__item.is-active:hover {
+:deep(.el-tabs__nav .el-tabs__item.is-active:hover) {
     color: #333333;
     background: #ffffff;
 }
 
-:deep .el-tabs__nav .el-tabs__item:hover {
+:deep(.el-tabs__nav .el-tabs__item:hover) {
     color: #666666;
     background: #dddddd;
 }

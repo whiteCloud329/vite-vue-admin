@@ -2,13 +2,14 @@ import { createApp } from 'vue'
 /** 重置样式 这里引入自定义的重置样式也可 */
 import '@unocss/reset/tailwind.css'
 import './style.css'
-import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
 import 'virtual:uno.css'
 import '@unocss/reset/normalize.css'
+
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
+
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // import { Vue3Menus } from 'vue3-menus'
 import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
@@ -25,6 +26,9 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 // app.component('vue3-menus', Vue3Menus)
 app.use(ContextMenu)
 app.use(router)
+
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const pinia = createPinia()
 // 数据持久化
