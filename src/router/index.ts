@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import lyLayout from '@/layout/index.vue'
 import { useTabsStore } from '@/store/modules/tabs.ts'
+import { ref } from 'vue'
 
 const router = createRouter({
     routes: [
@@ -52,6 +53,16 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            path: '/403',
+            name: '403',
+            component: () => import('@/views/system/error/403.vue'),
+        },
+        {
+            path: '/404',
+            name: '404',
+            component: () => import('@/views/system/error/404.vue'),
+        },
     ],
     history: createWebHistory(),
 })
@@ -61,7 +72,8 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         tabsStore.addTab(to) // 路由切换时添加 tab
     }
-    console.log(from)
+    const lastPath = ref(from.path)
+    sessionStorage.setItem('lastPath', lastPath.value)
     next()
 })
 export default router

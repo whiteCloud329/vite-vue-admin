@@ -3,18 +3,15 @@
         我是首页
         <div>store: count is {{ count }}</div>
         <div>store: doubleCount is {{ doubleCount }}</div>
+        <el-button type="danger" @click="onErrorClick">点击错误提示</el-button>
         <el-button type="primary" @click="increment">增加</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button @click="toggleDark">黑暗模式</el-button>
-        <button @click="colorMode = colorMode === 'dark' ? 'light' : 'dark'">
-            Mode {{ colorMode }}
-        </button>
     </div>
 </template>
 <script setup lang="ts">
 import { useCounterStore } from '@/store'
 import { computed } from 'vue'
-import { useColorMode, useDark, useToggle } from '@vueuse/core'
+import { ElMessage } from 'element-plus'
 
 defineOptions({ name: 'HomeView' })
 
@@ -30,9 +27,8 @@ const increment = () => {
 const reset = () => {
     useCounter.$reset()
 }
-
-const isDark = useDark()
-const colorMode = useColorMode()
-const toggleDark = useToggle(isDark)
+const onErrorClick = () => {
+    ElMessage.error('Oops, this is a error message.')
+}
 </script>
 <style scoped lang="scss"></style>

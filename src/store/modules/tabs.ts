@@ -26,6 +26,7 @@ export const useTabsStore = defineStore(
 
         // 添加或激活标签页
         const addTab = (route: RouteLocationNormalized) => {
+            console.log(route)
             const tab: TabType = {
                 title: route.meta.title as string, // 从路由元数据获取标题
                 path: route.path,

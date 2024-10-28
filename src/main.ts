@@ -1,29 +1,20 @@
 import { createApp } from 'vue'
-/** 重置样式 这里引入自定义的重置样式也可 */
-import '@unocss/reset/tailwind.css'
-import './style.css'
 
 import 'virtual:uno.css'
-import '@unocss/reset/normalize.css'
-
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
+import 'normalize.css'
+import './styles/index.css'
+import './styles/index.scss'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-// import { Vue3Menus } from 'vue3-menus'
-import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 import ContextMenu from '@imengyu/vue3-context-menu'
 import router from './router'
 import App from './App.vue'
 
 const app = createApp(App)
 
-app.use(ElementPlus)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-// app.component('vue3-menus', Vue3Menus)
 app.use(ContextMenu)
 app.use(router)
 

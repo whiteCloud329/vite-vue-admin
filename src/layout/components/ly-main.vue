@@ -3,7 +3,7 @@
         <ly-nav-tabs />
         <div class="ly-main-content">
             <router-view v-slot="{ Component }">
-                <transition name="out-in">
+                <transition name="main-content-transition" mode="out-in">
                     <component :is="Component" />
                 </transition>
             </router-view>
@@ -18,13 +18,14 @@ defineOptions({ name: 'ly-main' })
 <style scoped lang="scss">
 .ly-main {
     width: calc(100vw - 220px);
-    height: calc(100vh - 50px);
+    height: calc(100vh - 70px);
     background-color: #f5f5f5;
     padding: 10px;
 
     .ly-main-content {
         height: calc(100% - 40px);
         background-color: #fff;
+        border-radius: 4px;
     }
 }
 </style>

@@ -1,0 +1,23 @@
+// 覆盖 Element Plus 默认主题变量
+@use 'element-plus/theme-chalk/src/common/var.scss' with (
+    $colors: (
+        'primary': (
+            'base': #427bff,
+        ),
+        'success': (
+            'base': #52c41a,
+        ),
+        'error': (
+            'base': #ff4d4f,
+        )
+        //'warning': (
+    //    'base': var(--warning-color),
+    //),
+    //'danger': (
+    //    'base': var(--danger-color),
+    //),
+    //'info': (
+    //    'base': var(--info-color),
+    //),,,,
+    )
+);

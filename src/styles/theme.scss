@@ -1,0 +1,27 @@
+$primary-color: #427bff;
+$success-color: #52c41a;
+$fail-color: #ff4d4f;
+$dark-primary-color: #364870;
+$dark-primary-color-hover: rgba(66, 87, 140, 0.98);
+$dark-color: #141414;
+$dark-color-1: #2c2c2c;
+$dark-color-2: #232323;
+$dark-color-3: #302f2f;
+
+:root {
+    --primary-color: #{$primary-color}; // 使用 Sass 变量为 CSS 变量赋值
+    --success-color: #{$success-color};
+    --fail-color: #{$fail-color};
+    --dark-bg-color: #{$dark-color};
+    --dark-bg-color-inactive: #{$dark-color-1};
+    --dark-bg-color-active: #{$dark-color-2};
+    --dark-bg-color-active-1: #{$dark-color-3};
+}
+
+// 暗黑模式
+.dark {
+    --primary-color: #{$dark-primary-color}; // 使用 Sass 变量为 CSS 变量赋值
+    --el-color-primary: #{$dark-primary-color} !important;
+    --el-color-primary-light-5: #{$dark-primary-color-hover} !important;
+    --el-color-primary-light-3: #{$dark-primary-color-hover} !important;
+}

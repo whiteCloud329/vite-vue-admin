@@ -85,7 +85,7 @@ const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
 const handleTabClick = (pane: TabsPaneContext) => {
-    // console.log(pane.paneName, ev)
+    console.log(pane.paneName)
     router.push({ path: (pane.paneName || '').toString() })
 }
 
@@ -97,7 +97,13 @@ const handleTabClick1 = (tab: { path: string }) => {
 // 删除标签页
 const removeTab = (path: string) => {
     tabsStore.removeTab(path)
-    router.push(activeTab.value || '/')
+    if (activeTab.value) {
+        router.push(activeTab.value)
+    } else if (sessionStorage.getItem('lastPath')) {
+        router.push(sessionStorage.getItem('lastPath') || '/')
+    } else {
+        router.push('/')
+    }
 }
 // 打开右键菜单
 const onContextMenu = (e: MouseEvent, path: string) => {
@@ -141,14 +147,8 @@ const onContextMenu = (e: MouseEvent, path: string) => {
     }
 }
 
-// // 关闭当前标签页
-// const closeCurrentTab = () => {
-//     removeTab(activeTab.value)
-// }
-
 // 关闭选中标签页
 const closeSelectedTab = (tab: TabType) => {
-    console.log(tab)
     removeTab(tab.path)
 }
 
@@ -169,6 +169,10 @@ const closeAllTabs = () => {
     height: 36px;
     position: relative;
     background-color: #f1f1f1;
+
+    :deep(.el-tabs) {
+        height: 36px;
+    }
 
     .ly-nav-list {
         display: flex;
@@ -208,60 +212,61 @@ const closeAllTabs = () => {
     overflow-x: auto;
     white-space: nowrap;
     border: 0 !important;
+
+    .el-tabs__item {
+        width: 180px;
+        line-height: 32px;
+        height: 32px;
+        color: #999;
+        background: #eeeeee;
+        margin-right: 5px;
+        padding: 8px;
+        border: 0 !important;
+        border-radius: 4px 4px 0 0;
+        position: relative;
+
+        .el-icon {
+            position: absolute;
+            right: 26px;
+            font-size: 16px;
+        }
+
+        .el-icon:hover {
+            color: #fff;
+            background-color: #666;
+            border-radius: 50%;
+        }
+
+        .el-icon.is-icon-close {
+            position: absolute;
+            right: 8px;
+        }
+    }
+
+    .el-tabs__item.is-active {
+        width: 190px;
+        color: #333333;
+        background: #ffffff;
+        padding-right: 20px !important;
+    }
+
+    .el-tabs__item.is-active:hover {
+        color: #333333;
+        background: #ffffff;
+    }
+
+    .el-tabs__item:hover {
+        color: #666666;
+        background: #dddddd;
+    }
 }
 
 :deep(.el-tabs__header) {
-    border: 0;
+    margin: 0 !important;
+    border: 0 !important;
 }
 
 :deep(.el-tabs__content) {
     display: none;
-}
-
-:deep(.el-tabs__nav .el-tabs__item) {
-    width: 180px;
-    line-height: 32px;
-    height: 32px;
-    color: #999;
-    background: #eeeeee;
-    margin-right: 5px;
-    border: 0 !important;
-    border-radius: 4px 4px 0 0;
-    position: relative;
-
-    .el-icon {
-        position: absolute;
-        right: 26px;
-        font-size: 16px;
-    }
-
-    .el-icon:hover {
-        color: #fff;
-        background-color: #666;
-        border-radius: 50%;
-    }
-
-    .el-icon.is-icon-close {
-        position: absolute;
-        right: 8px;
-    }
-}
-
-:deep(.el-tabs__nav .el-tabs__item.is-active) {
-    width: 190px;
-    color: #333333;
-    background: #ffffff;
-    padding-right: 20px !important;
-    padding-left: 0 !important;
-}
-
-:deep(.el-tabs__nav .el-tabs__item.is-active:hover) {
-    color: #333333;
-    background: #ffffff;
-}
-
-:deep(.el-tabs__nav .el-tabs__item:hover) {
-    color: #666666;
-    background: #dddddd;
 }
 </style>

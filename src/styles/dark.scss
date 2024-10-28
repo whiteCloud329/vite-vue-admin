@@ -1,0 +1,27 @@
+@use 'app.scss' as *;
+@use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
+
+.dark {
+    color: var(--next-color-white) !important;
+
+    .ly-header,
+    .ly-main,
+    .ly-main-content,
+    .el-tabs {
+        background: var(--dark-bg-color) !important;
+    }
+
+    .el-tabs__item {
+        background: var(--dark-bg-color-active) !important;
+    }
+
+    .el-tabs__item:hover {
+        background: var(--dark-bg-color-active-1) !important;
+        color: var(--next-color-white) !important;
+    }
+
+    .is-active {
+        background: var(--next-color-dark-background-active) !important;
+        color: var(--next-color-white) !important;
+    }
+}
