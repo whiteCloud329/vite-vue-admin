@@ -4,6 +4,8 @@
         <div>store: count is {{ count }}</div>
         <div>store: doubleCount is {{ doubleCount }}</div>
         <el-button type="danger" @click="onErrorClick">点击错误提示</el-button>
+        <el-button type="danger" @click="onRouter(1)">跳转 id = 1</el-button>
+        <el-button type="danger" @click="onRouter(2)">跳转 id = 2</el-button>
         <el-button type="primary" @click="increment">增加</el-button>
         <el-button @click="reset">重置</el-button>
     </div>
@@ -12,8 +14,9 @@
 import { useCounterStore } from '@/store'
 import { computed } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useTabsStore } from '@/store/modules/tabs.ts'
 
-defineOptions({ name: 'HomeView' })
+defineOptions({ name: 'ly-home' })
 
 const useCounter = useCounterStore()
 
@@ -29,6 +32,15 @@ const reset = () => {
 }
 const onErrorClick = () => {
     ElMessage.error('Oops, this is a error message.')
+}
+const tabsStore = useTabsStore()
+const onRouter = (id: number) => {
+    tabsStore.addTab({
+        name: 'ly-demo',
+        query: {
+            id: id,
+        },
+    })
 }
 </script>
 <style scoped lang="scss"></style>

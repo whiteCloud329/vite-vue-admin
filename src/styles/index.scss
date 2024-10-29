@@ -15,10 +15,10 @@
 //'./styles/index.scss'
 
 @use 'app.scss' as *;
+@use 'dark.scss' as *;
 @use 'theme.scss' as *;
 @use 'element.scss' as *;
 @use 'element-plus/theme-chalk/index.css' as *;
 // 可选：引入暗黑模式的变量覆盖
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 @use '@imengyu/vue3-context-menu/lib/vue3-context-menu.css';
-@use 'dark.scss' as *;

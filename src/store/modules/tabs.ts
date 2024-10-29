@@ -1,74 +1,101 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { LocationQuery, RouteLocationNormalized } from 'vue-router'
+// import { LocationQuery, RouteLocationNormalized } from 'vue-router'
+import router from '@/router'
+import {
+    LocationQueryRaw,
+    RouteLocationAsPathGeneric,
+    RouteLocationAsRelativeGeneric,
+} from 'vue-router'
 
 // 定义 Tab 类型
 
 export interface TabType {
     title: string
-    path: string // 与路由 path 绑定
-    name?: string // 路由的 name
-    query?: LocationQuery
+    name?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric // 路由的 name
+    query?: object | LocationQueryRaw
 }
 
 export const useTabsStore = defineStore(
     'tabsStore',
     () => {
         const defaultTab: TabType = {
-            title: '首页', // 默认首页标题
-            path: '/', // 默认首页路径
+            title: '首页',
+            name: 'ly-home',
         }
+        const tabs = ref<TabType[]>([])
 
-        const tabs = ref<TabType[]>(
-            JSON.parse(localStorage.getItem('tabs') || '[]'),
-        ) // 页面刷新后从 localStorage 恢复 tabs
-        const activeTab = ref(localStorage.getItem('activeTab') || '/') // 默认激活的标签
+        if (localStorage.getItem('tabs')) {
+            tabs.value = JSON.parse(<string>localStorage.getItem('tabs'))
+        } else {
+            tabs.value.push(defaultTab)
+        }
+        // 页面刷新后从 localStorage 恢复 tabs
+        // const activeTab = ref(localStorage.getItem('activeTab') || 'ly-home') // 默认激活的标签
+        const activeTab = ref('')
+        activeTab.value = localStorage.getItem('activeTab') || 'ly-home'
 
         // 添加或激活标签页
-        const addTab = (route: RouteLocationNormalized) => {
-            console.log(route)
-            const tab: TabType = {
-                title: route.meta.title as string, // 从路由元数据获取标题
-                path: route.path,
-                name: route.name as string,
-                query: route.query,
-            }
-            const exists = tabs.value.some((t) => t.path === route.path)
+        const addTab = (nav: { name: string; query?: LocationQueryRaw }) => {
+            // 判断code 是否为空
+            if (!nav.name || nav.name === activeTab.value) return
+            // 判断当前tabsList 里面是否存在
+            const exists = tabs.value.some((tab) => tab.name === nav.name)
             if (!exists) {
-                tabs.value.push(tab)
+                // 获取路由信息
+                const route = router
+                    .getRoutes()
+                    .find((route) => nav.name === route.name)
+                // 获取路由信息
+                const tabRoute = {
+                    title: route?.meta.title as string,
+                    name: nav.name,
+                    query: nav.query,
+                }
+                tabs.value.push(tabRoute)
+                router.push({ name: nav.name, query: nav.query })
+            } else {
+                const tabNav = tabs.value.find((tab) => tab.name === nav.name)
+                if (tabNav) {
+                    if (nav.query) {
+                        tabNav.query = nav.query || {}
+                    }
+                    router.push({
+                        name: nav.name,
+                        query: tabNav.query as LocationQueryRaw,
+                    })
+                }
             }
-            setActiveTab(route.path)
+            setActiveTab(nav.name)
         }
 
         // 设置当前激活的标签页
-        const setActiveTab = (path: string) => {
-            activeTab.value = path
+        const setActiveTab = (name: string) => {
+            activeTab.value = name
         }
 
         // 删除标签页
-        const removeTab = (path: string) => {
-            const index = tabs.value.findIndex((tab) => tab.path === path)
-            if (index !== -1) {
-                tabs.value.splice(index, 1)
-                localStorage.setItem('tabs', JSON.stringify(tabs.value)) // 保存标签状态
-                if (activeTab.value === path && tabs.value.length > 0) {
-                    setActiveTab(tabs.value[Math.max(0, index - 1)].path)
-                }
+        const removeTab = (name: string) => {
+            const index = tabs.value.findIndex((tab) => tab.name === name)
+            tabs.value.splice(index, 1)
+            localStorage.setItem('tabs', JSON.stringify(tabs.value)) // 保存标签状态
+            if (activeTab.value === name && tabs.value.length > 0) {
+                setActiveTab(<string>tabs.value[Math.max(0, index - 1)].name)
             }
         }
 
         // 关闭其他标签页（保留首页）
-        const closeOtherTabs = (path: string) => {
+        const closeOtherTabs = (name: string) => {
             tabs.value = tabs.value.filter(
-                (tab) => tab.path === path || tab.path === '/',
+                (tab) => tab.name === name || tab.name === 'ly-home',
             )
-            setActiveTab(path)
+            setActiveTab(name)
         }
 
         // 关闭所有标签页
         const closeAllTabs = () => {
             tabs.value = [defaultTab]
-            activeTab.value = '/'
+            activeTab.value = 'ly-home'
         }
         return {
             tabs,

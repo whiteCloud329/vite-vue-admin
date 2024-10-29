@@ -11,16 +11,16 @@
             <el-tab-pane
                 class="ly-nav-item"
                 v-for="tab in tabs"
-                :key="tab.path"
+                :key="tab.name"
                 :label="tab.title"
-                :name="tab.path"
-                :closable="tab.path !== '/'"
+                :name="tab.name"
+                :closable="tab.name !== 'ly-home'"
             >
                 <template #label>
                     <div
                         class="w-100%"
-                        @contextmenu="onContextMenu($event, tab.path)"
-                        :ref="tab.path"
+                        @contextmenu="onContextMenu($event, tab.name as string)"
+                        :ref="tab.name as string"
                     >
                         {{ tab.title }}
                     </div>
@@ -43,13 +43,15 @@
                                 </el-dropdown-item>
                                 <template v-for="tab of tabs" :key="tab.path">
                                     <el-dropdown-item
-                                        @click="handleTabClick1(tab)"
+                                        @click="
+                                            handleTabClick1(tab.name as string)
+                                        "
                                     >
                                         <div class="dropdown-item">
                                             {{ tab.title }}
                                         </div>
                                         <el-icon
-                                            v-if="tab.path !== '/'"
+                                            v-if="tab.name !== 'ly-home'"
                                             class="dropdown-item-close"
                                             @click.stop="closeSelectedTab(tab)"
                                         >
@@ -85,31 +87,28 @@ const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
 const handleTabClick = (pane: TabsPaneContext) => {
-    console.log(pane.paneName)
-    router.push({ path: (pane.paneName || '').toString() })
+    // const path = (pane.paneName || '/').toString()
+    // router.push({ path: path })
+    tabsStore.addTab({
+        name: pane.paneName?.toString() || 'ly-home',
+    })
 }
 
 // 点击标签页时切换路由
-const handleTabClick1 = (tab: { path: string }) => {
-    // console.log(pane.paneName, ev)
-    router.push({ path: tab.path })
+const handleTabClick1 = (name: string) => {
+    tabsStore.addTab({
+        name: name,
+    })
 }
 // 删除标签页
-const removeTab = (path: string) => {
-    tabsStore.removeTab(path)
-    if (activeTab.value) {
-        router.push(activeTab.value)
-    } else if (sessionStorage.getItem('lastPath')) {
-        router.push(sessionStorage.getItem('lastPath') || '/')
-    } else {
-        router.push('/')
-    }
+const removeTab = (name: string) => {
+    tabsStore.removeTab(name)
 }
 // 打开右键菜单
-const onContextMenu = (e: MouseEvent, path: string) => {
+const onContextMenu = (e: MouseEvent, name: string) => {
     //prevent the browser's default menu
     e.preventDefault()
-    if (path === activeTab.value) {
+    if (name === activeTab.value) {
         //show your menu
         ContextMenu.showContextMenu({
             x: e.x - e.layerX + 25,
@@ -138,7 +137,7 @@ const onContextMenu = (e: MouseEvent, path: string) => {
                     label: '关闭',
                     onClick: () => {
                         closeSelectedTab(
-                            tabs.value.find((tab) => tab.path === path)!,
+                            tabs.value.find((tab) => tab.name === name)!,
                         )
                     },
                 },
@@ -149,7 +148,7 @@ const onContextMenu = (e: MouseEvent, path: string) => {
 
 // 关闭选中标签页
 const closeSelectedTab = (tab: TabType) => {
-    removeTab(tab.path)
+    removeTab(tab.name as string)
 }
 
 // 关闭其他标签页
