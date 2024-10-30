@@ -11,8 +11,13 @@
 import LyHeader from './components/ly-header.vue'
 import LyAside from './components/ly-aside.vue'
 import LyMain from './components/ly-main.vue'
+// import { computed } from 'vue'
+// import { useAppStore } from '@/store/modules/app.ts'
 
 defineOptions({ name: 'lyLayout' })
+
+// const appStore = useAppStore()
+// const isCollapse = computed(() => appStore.appState.isCollapse)
 </script>
 <style scoped lang="scss">
 .ly-container {

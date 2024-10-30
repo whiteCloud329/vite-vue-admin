@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import lyLayout from '@/layout/index.vue'
-import { useTabsStore } from '@/store/modules/tabs.ts'
+// import { useTabsStore } from '@/store/modules/tabs.ts'
 
 const router = createRouter({
     routes: [
@@ -66,13 +66,11 @@ const router = createRouter({
     history: createWebHistory(),
 })
 // 使用 Pinia 的 setup 模式 store
-router.beforeEach((to, from, next) => {
-    const tabsStore = useTabsStore() // 获取 store
-    if (to.meta.title) {
-        tabsStore.addTab({ name: to.name as string, query: to.query }) // 路由切换时添加 tab
-    }
-    const lastPath = from.path
-    sessionStorage.setItem('lastPath', lastPath)
-    next()
-})
+// router.beforeEach((to, from, next) => {
+//     const tabsStore = useTabsStore() // 获取 store
+//     if (to.meta.title) {
+//         tabsStore.addTab({ name: to.name as string, query: to.query }) // 路由切换时添加 tab
+//     }
+//     next()
+// })
 export default router

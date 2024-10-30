@@ -24,17 +24,10 @@ export const useTabsStore = defineStore(
             name: 'ly-home',
         }
         const tabs = ref<TabType[]>([])
-
-        if (localStorage.getItem('tabs')) {
-            tabs.value = JSON.parse(<string>localStorage.getItem('tabs'))
-        } else {
-            tabs.value.push(defaultTab)
-        }
-        // 页面刷新后从 localStorage 恢复 tabs
-        // const activeTab = ref(localStorage.getItem('activeTab') || 'ly-home') // 默认激活的标签
+        tabs.value.push(defaultTab)
         const activeTab = ref('')
-        activeTab.value = localStorage.getItem('activeTab') || 'ly-home'
-
+        activeTab.value = 'ly-home'
+        const historyTabs = ref([])
         // 添加或激活标签页
         const addTab = (nav: { name: string; query?: LocationQueryRaw }) => {
             // 判断code 是否为空
@@ -66,6 +59,10 @@ export const useTabsStore = defineStore(
                     })
                 }
             }
+            historyTabs.value = historyTabs.value.filter(
+                (item) => item !== nav.name,
+            )
+            historyTabs.value.push(nav.name as never)
             setActiveTab(nav.name)
         }
 
@@ -75,12 +72,38 @@ export const useTabsStore = defineStore(
         }
 
         // 删除标签页
+        /**
+         * 关闭标签页并更新历史标签页列表
+         *
+         * 此函数旨在移除当前打开的标签页列表中的指定标签页，同时从历史标签页列表中移除它
+         * 如果移除后仍有历史标签页，则跳转到最后一个历史标签页；否则，跳转到首页
+         *
+         * @param name 要关闭的标签页的名称
+         */
         const removeTab = (name: string) => {
+            // 查找并移除当前标签页列表中的指定标签页
             const index = tabs.value.findIndex((tab) => tab.name === name)
-            tabs.value.splice(index, 1)
-            localStorage.setItem('tabs', JSON.stringify(tabs.value)) // 保存标签状态
-            if (activeTab.value === name && tabs.value.length > 0) {
-                setActiveTab(<string>tabs.value[Math.max(0, index - 1)].name)
+            if (index !== -1) tabs.value.splice(index, 1)
+
+            // 查找并移除历史标签页列表中的指定标签页
+            const historyIndex = historyTabs.value?.indexOf(name as never)
+            if (historyIndex !== -1) historyTabs.value.splice(historyIndex, 1)
+
+            // 获取历史标签页列表中的最后一个标签页名称
+            const lastTabName = historyTabs.value[historyTabs.value.length - 1]
+            // 根据最后一个标签页名称查找对应的标签页对象
+            const lastTab = tabs.value.find((item) => item.name === lastTabName)
+
+            // 如果找到最后一个标签页，则跳转到该标签页，否则跳转到首页
+            if (lastTab) {
+                router.push({
+                    name: lastTab.name as string,
+                    query: lastTab.query as LocationQueryRaw,
+                })
+                setActiveTab(lastTab.name as string)
+            } else {
+                router.push({ name: 'ly-home' })
+                setActiveTab('ly-home')
             }
         }
 
@@ -100,6 +123,7 @@ export const useTabsStore = defineStore(
         return {
             tabs,
             activeTab,
+            historyTabs,
             addTab,
             setActiveTab,
             removeTab,

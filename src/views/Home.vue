@@ -8,6 +8,13 @@
         <el-button type="danger" @click="onRouter(2)">跳转 id = 2</el-button>
         <el-button type="primary" @click="increment">增加</el-button>
         <el-button @click="reset">重置</el-button>
+        <div class="h-100px"></div>
+        <el-button @click="toggleFooter"
+            >{{ appState.isShowFooter ? '关闭' : '打开' }} 底部空间
+        </el-button>
+        <el-button @click="toggleCollapse"
+            >{{ appState.isCollapse ? '关闭' : '打开' }} 侧边栏
+        </el-button>
     </div>
 </template>
 <script setup lang="ts">
@@ -15,6 +22,7 @@ import { useCounterStore } from '@/store'
 import { computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useTabsStore } from '@/store/modules/tabs.ts'
+import { useAppStore } from '@/store/modules/app.ts'
 
 defineOptions({ name: 'ly-home' })
 
@@ -41,6 +49,22 @@ const onRouter = (id: number) => {
             id: id,
         },
     })
+}
+const appStore = useAppStore()
+
+const appState = computed(() => {
+    return appStore.appState
+})
+
+// const toggleState = (key: string) => {
+//     appStore.toggleState(key)
+// }
+
+const toggleCollapse = () => {
+    appStore.toggleCollapse()
+}
+const toggleFooter = () => {
+    appStore.toggleFooter()
 }
 </script>
 <style scoped lang="scss"></style>

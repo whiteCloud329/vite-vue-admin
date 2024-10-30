@@ -8,6 +8,10 @@ $dark-color-1: #2c2c2c;
 $dark-color-2: #232323;
 $dark-color-3: #302f2f;
 
+$aside-width: 210px;
+$aside-fold-width: 10px;
+$footer-height: 32px;
+
 :root {
     --primary-color: #{$primary-color}; // 使用 Sass 变量为 CSS 变量赋值
     --success-color: #{$success-color};
@@ -16,6 +20,10 @@ $dark-color-3: #302f2f;
     --dark-bg-color-inactive: #{$dark-color-1};
     --dark-bg-color-active: #{$dark-color-2};
     --dark-bg-color-active-1: #{$dark-color-3};
+    --footer-height: #{$footer-height};
+    --aside-width: #{$aside-width};
+    --aside-fold-width: #{$aside-fold-width};
+    --main-background: #ffffff;
 }
 
 // 暗黑模式
@@ -24,4 +32,5 @@ $dark-color-3: #302f2f;
     --el-color-primary: #{$dark-primary-color} !important;
     --el-color-primary-light-5: #{$dark-primary-color-hover} !important;
     --el-color-primary-light-3: #{$dark-primary-color-hover} !important;
+    --main-background: #{$dark-color};
 }

@@ -9,15 +9,13 @@
         ),
         'error': (
             'base': #ff4d4f,
-        )
-        //'warning': (
-    //    'base': var(--warning-color),
-    //),
-    //'danger': (
-    //    'base': var(--danger-color),
-    //),
-    //'info': (
-    //    'base': var(--info-color),
-    //),,,,
+        ),
+        'danger': (
+            'base': #ff4d4f,
+        ),
     )
 );
+//@use 'element-plus/theme-chalk/src/index.scss' as *;
+@use 'element-plus/theme-chalk/el-loading.css';
+@use 'element-plus/theme-chalk/el-message.css';
+@use 'element-plus/theme-chalk/el-notification.css';

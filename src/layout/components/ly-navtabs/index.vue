@@ -165,7 +165,7 @@ const closeAllTabs = () => {
 <style scoped lang="scss">
 .ly-nav-tabs {
     width: 100%;
-    height: 36px;
+    height: 32px;
     position: relative;
     background-color: #f1f1f1;
 
