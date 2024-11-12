@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import lyLayout from '@/layout/index.vue'
-// import { useTabsStore } from '@/store/modules/tabs.ts'
 
 const router = createRouter({
     routes: [
         {
             path: '/',
-            name: 'HomeView',
+            name: 'viteAdmin',
+            redirect: '/ly-home',
             component: lyLayout,
             children: [
                 {
@@ -18,15 +18,8 @@ const router = createRouter({
                     },
                     component: () => import('@/views/Home.vue'),
                 },
-            ],
-        },
-        {
-            path: '/demo',
-            name: 'DemoView',
-            component: lyLayout,
-            children: [
                 {
-                    path: '',
+                    path: 'demo',
                     name: 'ly-demo',
                     meta: {
                         title: 'demo页',
@@ -34,15 +27,8 @@ const router = createRouter({
                     },
                     component: () => import('@/views/demo.vue'),
                 },
-            ],
-        },
-        {
-            path: '/demo1',
-            name: 'Demo1View',
-            component: lyLayout,
-            children: [
                 {
-                    path: '',
+                    path: 'demo1',
                     name: 'ly-demo1',
                     meta: {
                         title: 'demo1页',
@@ -53,18 +39,24 @@ const router = createRouter({
             ],
         },
         {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/views/system/login/index.vue'),
+        },
+        {
             path: '/403',
             name: '403',
             component: () => import('@/views/system/error/403.vue'),
         },
         {
-            path: '/404',
+            path: '/:pathMatch(.*)*',
             name: '404',
             component: () => import('@/views/system/error/404.vue'),
         },
     ],
     history: createWebHistory(),
 })
+
 // 使用 Pinia 的 setup 模式 store
 // router.beforeEach((to, from, next) => {
 //     const tabsStore = useTabsStore() // 获取 store

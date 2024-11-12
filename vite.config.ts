@@ -1,5 +1,5 @@
 import UnoCSS from 'unocss/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -13,41 +13,53 @@ function pathResolver(dir: string) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
-    plugins: [
-        vue(),
-        vueDevTools(),
-        UnoCSS(),
-        AutoImport({
-            resolvers: [ElementPlusResolver()],
-        }),
-        Components({
-            resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
-        }),
-    ],
-    resolve: {
-        alias: [
-            {
-                find: '@',
-                replacement: resolve(__dirname, './src'),
-            },
-            {
-                find: '_vi',
-                replacement: pathResolver('/src/views'),
-            },
+export default defineConfig(({ mode }) => {
+    const viteEnv = loadEnv(mode, process.cwd())
+    const { VITE_APP_LOCALHOST, VITE_APP_REQUEST } = viteEnv
+    return {
+        plugins: [
+            vue(),
+            vueDevTools(),
+            UnoCSS(),
+            AutoImport({
+                resolvers: [ElementPlusResolver()],
+            }),
+            Components({
+                resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
+            }),
         ],
-    },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                api: 'modern-compiler', // or 'modern'
-                additionalData: `@use "@/styles/element.scss" as *;`,
+        resolve: {
+            alias: [
+                {
+                    find: '@',
+                    replacement: resolve(__dirname, './src'),
+                },
+                {
+                    find: '_vi',
+                    replacement: pathResolver('/src/views'),
+                },
+            ],
+        },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    api: 'modern-compiler', // or 'modern'
+                    additionalData: `@use "@/styles/element.scss" as *;`,
+                },
             },
         },
-    },
-    server: {
-        hmr: true,
-        open: true,
-        port: 9529,
-    },
+        server: {
+            hmr: true,
+            open: true,
+            port: 9529,
+            host: VITE_APP_LOCALHOST,
+            proxy: {
+                '/api': {
+                    target: VITE_APP_REQUEST,
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/api/, '/api'),
+                },
+            },
+        },
+    }
 })

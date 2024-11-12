@@ -31,7 +31,11 @@ export const useTabsStore = defineStore(
         // 添加或激活标签页
         const addTab = (nav: { name: string; query?: LocationQueryRaw }) => {
             // 判断code 是否为空
-            if (!nav.name || nav.name === activeTab.value) return
+            if (
+                !nav.name ||
+                (nav.name === activeTab.value && nav.name !== 'ly-home')
+            )
+                return
             // 判断当前tabsList 里面是否存在
             const exists = tabs.value.some((tab) => tab.name === nav.name)
             if (!exists) {

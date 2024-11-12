@@ -15,7 +15,7 @@ import { appStateType } from '@/types/app-types.ts'
 //     backRouter: false, // 后端路由
 // }
 
-const setting: appStateType = {
+export const setting: appStateType = {
     theme: 'dark', // 默认主题
     menuTheme: 'default', // 菜单主题
     isCollapse: false, // 是否折叠菜单
@@ -29,5 +29,3 @@ const setting: appStateType = {
     frontRouter: true, // 前端路由
     backRouter: false, // 后端路由
 }
-
-export { setting }

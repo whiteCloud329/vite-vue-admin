@@ -15,6 +15,8 @@
         <el-button @click="toggleCollapse"
             >{{ appState.isCollapse ? '关闭' : '打开' }} 侧边栏
         </el-button>
+        <el-button @click="getSupplierList"> 数据请求</el-button>
+        <el-button @click="getDetail"> 数据请求</el-button>
     </div>
 </template>
 <script setup lang="ts">
@@ -23,6 +25,7 @@ import { computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useTabsStore } from '@/store/modules/tabs.ts'
 import { useAppStore } from '@/store/modules/app.ts'
+import { customsDeclaration, querySupplierList } from '@/api/select.ts'
 
 defineOptions({ name: 'ly-home' })
 
@@ -66,5 +69,20 @@ const toggleCollapse = () => {
 const toggleFooter = () => {
     appStore.toggleFooter()
 }
+
+const getSupplierList = async (val = '') => {
+    const { code, data, msg } = await querySupplierList({
+        page: { pageIndex: 1, pageSize: 50 },
+        data: { enterpriseName: val },
+    }).then(({ data }) => data)
+    console.log(code, data, msg)
+}
+const getDetail = async () => {
+    const { code, data, msg } = await customsDeclaration({ id: 85 }).then(
+        ({ data }) => data,
+    )
+    console.log(code, data, msg)
+}
+// getSupplierList()
 </script>
 <style scoped lang="scss"></style>
