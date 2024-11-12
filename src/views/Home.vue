@@ -16,6 +16,7 @@
             >{{ appState.isCollapse ? '关闭' : '打开' }} 侧边栏
         </el-button>
         <el-button @click="getSupplierList"> 数据请求</el-button>
+        <el-button @click="getSupplierList"> 数据请求</el-button>
         <el-button @click="getDetail"> 数据请求</el-button>
     </div>
 </template>
@@ -71,11 +72,11 @@ const toggleFooter = () => {
 }
 
 const getSupplierList = async (val = '') => {
-    const { code, data, msg } = await querySupplierList({
+    const { data } = await querySupplierList({
         page: { pageIndex: 1, pageSize: 50 },
         data: { enterpriseName: val },
-    }).then(({ data }) => data)
-    console.log(code, data, msg)
+    })
+    console.log(data)
 }
 const getDetail = async () => {
     const { code, data, msg } = await customsDeclaration({ id: 85 }).then(

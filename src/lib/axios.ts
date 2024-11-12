@@ -4,6 +4,7 @@ import axios, {
     InternalAxiosRequestConfig,
 } from 'axios'
 import { getToken, setCookies } from '@/utils/auth.ts'
+import { ElMessage } from 'element-plus'
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     cancelPrevious?: boolean // 自定义字段，用于控制是否取消之前的请求
@@ -77,12 +78,43 @@ instance.interceptors.response.use(
         // 请求完成后移除该请求的取消操作
         delete pendingRequests[key]
         console.log(response)
-        return response
+        if (response.status === 200) {
+            return response.data
+        }
+        ElMessage.error(response.statusText)
+        return Promise.reject(response.statusText)
     },
     (error) => {
         if (axios.isCancel(error)) {
             console.log('请求已取消:', error.message)
         } else {
+            if (error.response) {
+                const status = error.response.status
+                switch (status) {
+                    case 403:
+                        console.warn('无权限访问，请重新登录')
+                        ElMessage.warning('无权限访问')
+                        break
+                    case 401:
+                        console.warn('未授权，跳转到登录页面')
+                        ElMessage.warning('未授权')
+                        break
+                    case 404:
+                        console.warn('请求的资源不存在')
+                        ElMessage.warning('请求的资源不存在')
+                        break
+                    case 500:
+                        console.error('服务器内部错误')
+                        ElMessage.warning('服务器内部错误')
+                        break
+                    default:
+                        ElMessage.warning(`发生错误：状态码 ${status}`)
+                        console.error(`发生错误：状态码 ${status}`)
+                }
+            } else {
+                console.error('未收到响应或请求被拒绝:', error.message)
+            }
+
             console.error('请求出错:', error)
         }
         return Promise.reject(error)
