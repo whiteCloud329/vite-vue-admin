@@ -23,7 +23,7 @@ const generateKey = (config: AxiosRequestConfig): string => {
 const whitelistEndpoints = ['/public-endpoint', '/another-public-endpoint']
 
 const instance = axios.create({
-    timeout: 1000,
+    timeout: 50000,
     baseURL: import.meta.env.VITE_APP_BASEURL,
     withCredentials: true,
     headers: {

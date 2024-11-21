@@ -18,6 +18,8 @@
         <el-button @click="getSupplierList"> 数据请求</el-button>
         <el-button @click="getSupplierList"> 数据请求</el-button>
         <el-button @click="getDetail"> 数据请求</el-button>
+        <br />
+        <el-button @click="getSystemMenu">获取菜单</el-button>
     </div>
 </template>
 <script setup lang="ts">
@@ -27,6 +29,7 @@ import { ElMessage } from 'element-plus'
 import { useTabsStore } from '@/store/modules/tabs.ts'
 import { useAppStore } from '@/store/modules/app.ts'
 import { customsDeclaration, querySupplierList } from '@/api/select.ts'
+import { useUserStore } from '@/store/modules/user.ts'
 
 defineOptions({ name: 'ly-home' })
 
@@ -55,6 +58,7 @@ const onRouter = (id: number) => {
     })
 }
 const appStore = useAppStore()
+const userStore = useUserStore()
 
 const appState = computed(() => {
     return appStore.appState
@@ -83,6 +87,9 @@ const getDetail = async () => {
         ({ data }) => data,
     )
     console.log(code, data, msg)
+}
+const getSystemMenu = async () => {
+    await userStore.getMenus()
 }
 // getSupplierList()
 </script>
