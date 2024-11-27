@@ -17,6 +17,15 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "jsxFactory": "h",
+    // Vue JSX 工厂函数
+    "jsxFragmentFactory": "Fragment",
+    // Vue Fragment 支持
+    "types": [
+      "vite/client"
+    ],
+    // Vite 环境类型支持
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

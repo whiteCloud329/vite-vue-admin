@@ -1,5 +1,5 @@
 <template>
-    <div class="ly-main" :class="{ 'aside-collapse': !appState.isCollapse }">
+    <div class="ly-main" :class="{ 'aside-collapse': appState.isCollapse }">
         <ly-nav-tabs />
         <div
             class="ly-main-content"

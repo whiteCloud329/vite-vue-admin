@@ -20,6 +20,11 @@
         <el-button @click="getDetail"> 数据请求</el-button>
         <br />
         <el-button @click="getSystemMenu">获取菜单</el-button>
+        <el-select :model-value="asideTheme" @change="changeTheme">
+            <el-option label="默认" value="default"></el-option>
+            <el-option label="顶部" value="top"></el-option>
+            <el-option label="传统" value="normal"></el-option>
+        </el-select>
     </div>
 </template>
 <script setup lang="ts">
@@ -92,5 +97,12 @@ const getSystemMenu = async () => {
     await userStore.getMenus()
 }
 // getSupplierList()
+
+const asideTheme = computed(() => appStore.appAsideTheme)
+
+const changeTheme = (val: string) => {
+    console.log(val)
+    appStore.setAppAsideTheme(val)
+}
 </script>
 <style scoped lang="scss"></style>

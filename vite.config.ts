@@ -1,12 +1,15 @@
 import UnoCSS from 'unocss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// import { createStyleImportPlugin } from 'vite-plugin-style-import'
 import { resolve } from 'node:path'
 import * as process from 'process'
+import { presetScrollbarHide } from 'unocss-preset-scrollbar-hide'
 
 function pathResolver(dir: string) {
     return resolve(process.cwd(), '.', dir)
@@ -19,8 +22,10 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [
             vue(),
+            vueJsx(),
             vueDevTools(),
             UnoCSS(),
+            presetScrollbarHide(),
             AutoImport({
                 resolvers: [ElementPlusResolver()],
             }),

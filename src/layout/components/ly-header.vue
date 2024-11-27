@@ -1,7 +1,16 @@
 <template>
     <div class="ly-header">
-        <div></div>
-        <div class="flex items-center">
+        <div
+            class="ly-header-main flex"
+            :class="{ 'ly-aside-top-has-logo': showLogo }"
+        >
+            <div v-if="showLogo" class="ly-logo w200px">logo</div>
+            <div v-if="appAsideTheme === 'top'">
+                顶部
+                <ly-aside></ly-aside>
+            </div>
+        </div>
+        <div class="flex items-center justify-end w200px">
             <el-space size="large">
                 <div class="cursor-pointer flex items-center">
                     <el-icon>
@@ -60,6 +69,8 @@ import { useDark, useToggle } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { computed } from 'vue'
 import { useUserStore } from '@/store/modules/user.ts'
+import { useAppStore } from '@/store/modules/app.ts'
+import LyAside from '@/layout/components/ly-aside/index.vue'
 
 defineOptions({ name: 'ly-header' })
 
@@ -70,6 +81,12 @@ const handleCommand = (command: string | number | object) => {
 }
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
+
+const appStore = useAppStore()
+const appState = computed(() => appStore.appState)
+const showLogo = computed(() => appState.value.isShowLogo)
+const appAsideTheme = computed(() => appStore.appAsideTheme)
+console.log('appState', appState, showLogo.value)
 </script>
 <style scoped lang="scss">
 .ly-header {
@@ -93,6 +110,14 @@ const userInfo = computed(() => userStore.userInfo)
         .el-switch-off-color {
             color: #666666;
         }
+    }
+
+    .ly-header-main {
+        max-width: calc(100vw - 220px);
+    }
+
+    .ly-aside-top-has-logo {
+        max-width: calc(100vw - var(--logo-width) - 220px);
     }
 
     .ly-dark {

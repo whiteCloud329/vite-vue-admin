@@ -1,25 +1,28 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { getMenuList } from '@/api/system.ts'
-import { MenuItem } from '@/types/app-types.ts'
+import { MenuItemType } from '@/types/app-types.ts'
 
 export const useUserStore = defineStore('userStore', () => {
     const userInfo = reactive({
         name: 'admin',
         avatar: '',
         role: ['admin', 'normal'],
+        menus: <MenuItemType[]>[],
     })
 
-    let menus = reactive<MenuItem[]>([])
+    const menus = ref<MenuItemType[]>([])
+    // menus = ref<MenuItem[]>([])
     const getMenus = async () => {
         const { data } = await getMenuList()
         const { menuTree, buttonCodes } = buildTree(data)
-        menus = menuTree
-        console.log(menuTree, buttonCodes)
+        // menus.value = menuTree
+        menus.value = userInfo.menus = [...menuTree]
+        console.log(menuTree, buttonCodes, menus)
     }
 
-    function buildTree(data: MenuItem[]) {
-        const menuTree: MenuItem[] = []
+    function buildTree(data: MenuItemType[]) {
+        const menuTree: MenuItemType[] = []
         let buttonCodes = []
         // 按钮权限 -- type = 3 为按钮
         const filterButton = data.filter((item) => item.type === 3)
@@ -28,18 +31,18 @@ export const useUserStore = defineStore('userStore', () => {
         const filterMenu = data.filter(
             (item) => item.type !== 3 && item.parentId !== 0,
         )
-        const menuMap: Record<number, MenuItem> = {}
+        const menuMap: Record<number, MenuItemType> = {}
 
         // const filterRouter = filterMenu.filter((item) => item.url)
         // console.log('filterRouter', filterRouter)
         // 初始化 map，把每个节点的 id 作为键，节点对象本身作为值
-        filterMenu.forEach((item: MenuItem) => {
-            menuMap[item.id] = { ...item, children: [] }
+        filterMenu.forEach((item: MenuItemType) => {
+            menuMap[item.id as number] = { ...item, children: [] }
         })
 
         // 构建树
-        filterMenu.forEach((item: MenuItem) => {
-            const node = menuMap[item.id]
+        filterMenu.forEach((item: MenuItemType) => {
+            const node = menuMap[item.id as number]
             if (item.parentId) {
                 // 不是根节点，则加入父节点的 children 中
                 const parent = menuMap[item.parentId]
