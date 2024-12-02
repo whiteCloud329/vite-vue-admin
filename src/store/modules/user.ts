@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 import { getMenuList } from '@/api/system.ts'
+import routerPath from '@/router/path.ts'
 import { MenuItemType } from '@/types/app-types.ts'
+import { RouteRecordRaw } from 'vue-router'
+import router from '@/router'
 
 export const useUserStore = defineStore('userStore', () => {
     const userInfo = reactive({
@@ -12,10 +15,13 @@ export const useUserStore = defineStore('userStore', () => {
     })
 
     const menus = ref<MenuItemType[]>([])
+    const menuRoutes = ref<MenuItemType[]>([])
     // menus = ref<MenuItem[]>([])
     const getMenus = async () => {
         const { data } = await getMenuList()
         const { menuTree, buttonCodes } = buildTree(data)
+        menuRoutes.value = data
+        getRouterByMenus(data)
         // menus.value = menuTree
         menus.value = userInfo.menus = [...menuTree]
         console.log(menuTree, buttonCodes, menus)
@@ -56,13 +62,49 @@ export const useUserStore = defineStore('userStore', () => {
                 menuTree.push(node)
             }
         })
-
         return { menuTree, buttonCodes }
     }
+
+    function getRouterByMenus(menus: MenuItemType[]) {
+        const routerMap: Record<string, MenuItemType> = {}
+        const routerList: RouteRecordRaw[] = []
+        menus
+            .filter((item: MenuItemType) => item.type === 2 && item.path)
+            .forEach((item: MenuItemType) => {
+                const routeItem: RouteRecordRaw = {
+                    path: item.path as string,
+                    name: item.name as string,
+                    component: routerPath[item.path as string],
+                    meta: {
+                        title: item.name as string,
+                        icon: item.icon as string,
+                        code: item.code as string,
+                    },
+                }
+
+                routerList.push(routeItem)
+                router.addRoute(routeItem)
+                routerMap[item.path as string] = item
+                // console.log(routeItem, router.getRoutes())
+            })
+
+        // console.log(routerMap, routerList)
+        return { routerMap, routerList }
+    }
+
+    // function getRouterByButton(buttonCodes: string[]) {
+    //     const menuList: MenuItemType[] = []
+    //     buttonCodes.forEach((code) => {
+    //         const menu = menus.value.find((item) => item.code === code)
+    //         if (menu) menuList.push(menu)
+    //     })
+    //     return menuList
+    // }
 
     return {
         userInfo,
         menus,
+        menuRoutes,
         getMenus,
     }
 })

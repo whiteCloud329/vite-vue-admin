@@ -68,7 +68,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { TabType, useTabsStore } from '@/store/modules/tabs.ts'
 import { useRouter } from 'vue-router'
 import { CloseBold, MoreFilled } from '@element-plus/icons-vue'
@@ -77,6 +77,7 @@ import { TabsPaneContext } from 'element-plus'
 
 const tabsStore = useTabsStore()
 const router = useRouter()
+// const route = useRoute()
 
 defineOptions({ name: 'lyNavTabs' })
 const activeTab = computed({
@@ -87,8 +88,6 @@ const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
 const handleTabClick = (pane: TabsPaneContext) => {
-    // const path = (pane.paneName || '/').toString()
-    // router.push({ path: path })
     tabsStore.addTab({
         name: pane.paneName?.toString() || 'ly-home',
     })
@@ -117,7 +116,10 @@ const onContextMenu = (e: MouseEvent, name: string) => {
                 {
                     label: '刷新',
                     onClick: () => {
-                        location.reload()
+                        // location.reload()
+                        if (refreshPage && typeof refreshPage === 'function') {
+                            refreshPage()
+                        }
                     },
                 },
                 {
@@ -145,6 +147,8 @@ const onContextMenu = (e: MouseEvent, name: string) => {
         })
     }
 }
+
+const refreshPage = inject('refreshPage')
 
 // 关闭选中标签页
 const closeSelectedTab = (tab: TabType) => {

@@ -1,4 +1,6 @@
-<template>我是菜单1</template>
+<template>
+    <div>我是菜单1</div>
+</template>
 <script setup lang="ts">
 defineOptions({ name: 'ly-menu1' })
 </script>

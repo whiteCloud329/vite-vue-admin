@@ -12,6 +12,7 @@ import {
 
 export interface TabType {
     title: string
+    path?: string
     name?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric // 路由的 name
     query?: object | LocationQueryRaw
 }
@@ -21,6 +22,7 @@ export const useTabsStore = defineStore(
     () => {
         const defaultTab: TabType = {
             title: '首页',
+            path: '',
             name: 'ly-home',
         }
         const tabs = ref<TabType[]>([])
@@ -29,7 +31,11 @@ export const useTabsStore = defineStore(
         activeTab.value = 'ly-home'
         const historyTabs = ref([])
         // 添加或激活标签页
-        const addTab = (nav: { name: string; query?: LocationQueryRaw }) => {
+        const addTab = (nav: {
+            name?: string | null
+            query?: LocationQueryRaw
+        }) => {
+            console.log(nav, router, router.getRoutes())
             // 判断code 是否为空
             if (
                 !nav.name ||
@@ -37,30 +43,34 @@ export const useTabsStore = defineStore(
             )
                 return
             // 判断当前tabsList 里面是否存在
-            const exists = tabs.value.some((tab) => tab.name === nav.name)
+            const exists = tabs.value.find((tab) => tab.name === nav.name)
+            // 获取路由信息
+            const route = router
+                .getRoutes()
+                .find((route) => nav.name === route.name)
             if (!exists) {
-                // 获取路由信息
-                const route = router
-                    .getRoutes()
-                    .find((route) => nav.name === route.name)
                 // 获取路由信息
                 const tabRoute = {
                     title: route?.meta.title as string,
-                    name: nav.name,
+                    path: route?.path as string,
+                    name: route?.name as string,
                     query: nav.query,
                 }
                 tabs.value.push(tabRoute)
-                router.push({ name: nav.name, query: nav.query })
+                router
+                    .push({ name: route?.name, query: nav.query })
+                    .then(() => {})
             } else {
-                const tabNav = tabs.value.find((tab) => tab.name === nav.name)
-                if (tabNav) {
+                if (exists) {
                     if (nav.query) {
-                        tabNav.query = nav.query || {}
+                        exists.query = nav.query || {}
                     }
-                    router.push({
-                        name: nav.name,
-                        query: tabNav.query as LocationQueryRaw,
-                    })
+                    router
+                        .push({
+                            name: nav.name,
+                            query: exists.query as LocationQueryRaw,
+                        })
+                        .then(() => {})
                 }
             }
             historyTabs.value = historyTabs.value.filter(
@@ -100,13 +110,15 @@ export const useTabsStore = defineStore(
 
             // 如果找到最后一个标签页，则跳转到该标签页，否则跳转到首页
             if (lastTab) {
-                router.push({
-                    name: lastTab.name as string,
-                    query: lastTab.query as LocationQueryRaw,
-                })
+                router
+                    .push({
+                        name: lastTab.name as string,
+                        query: lastTab.query as LocationQueryRaw,
+                    })
+                    .then(() => {})
                 setActiveTab(lastTab.name as string)
             } else {
-                router.push({ name: 'ly-home' })
+                router.push({ name: 'ly-home' }).then(() => {})
                 setActiveTab('ly-home')
             }
         }

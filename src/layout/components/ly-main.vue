@@ -1,5 +1,10 @@
 <template>
-    <div class="ly-main" :class="{ 'aside-collapse': appState.isCollapse }">
+    <div
+        class="ly-main"
+        :class="{
+            'aside-collapse': appState.isCollapse || appAsideTheme === 'top',
+        }"
+    >
         <ly-nav-tabs />
         <div
             class="ly-main-content"
@@ -7,7 +12,7 @@
         >
             <router-view v-slot="{ Component }">
                 <transition name="main-content-transition" mode="out-in">
-                    <component :is="Component" />
+                    <component :is="Component" :key="currentKey" />
                 </transition>
             </router-view>
         </div>
@@ -17,13 +22,41 @@
 <script setup lang="ts">
 import LyNavTabs from '@/layout/components/ly-navtabs/index.vue'
 import { useAppStore } from '@/store/modules/app.ts'
-import { computed } from 'vue'
+import { computed, nextTick, provide, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 defineOptions({ name: 'ly-main' })
 
 const appStore = useAppStore()
 
 const appState = computed(() => appStore.appState)
+const appAsideTheme = computed(() => appStore.appAsideTheme)
+const route = useRoute()
+const currentKey = ref(route.fullPath)
+// 监听路由变化更新 key
+watch(
+    () => route.fullPath,
+    (newPath) => {
+        currentKey.value = newPath
+    },
+)
+
+// 提供刷新方法
+// function refreshPage() {
+//     currentKey.value = '' // 先清空 key
+//     console.log('刷新页面')
+//     nextTick(() => {
+//         currentKey.value = route.fullPath // 重新赋值 key
+//     })
+// }
+
+provide('refreshPage', () => {
+    currentKey.value = '' // 先清空 key
+    console.log('刷新页面')
+    nextTick(() => {
+        currentKey.value = route.fullPath // 重新赋值 key
+    })
+})
 </script>
 <style scoped lang="scss">
 .ly-main {

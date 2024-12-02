@@ -6,7 +6,6 @@
         >
             <div v-if="showLogo" class="ly-logo w200px">logo</div>
             <div v-if="appAsideTheme === 'top'">
-                顶部
                 <ly-aside></ly-aside>
             </div>
         </div>

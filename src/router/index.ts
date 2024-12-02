@@ -1,67 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import lyLayout from '@/layout/index.vue'
+// import { useTabsStore } from '@/store/modules/tabs.ts'
+import staticRouters from '@/router/static.ts'
+import { dynamicRouters } from '@/router/dynamic.ts'
 
 const router = createRouter({
-    routes: [
-        {
-            path: '/',
-            name: 'viteAdmin',
-            redirect: '/ly-home',
-            component: lyLayout,
-            children: [
-                {
-                    path: '',
-                    name: 'ly-home',
-                    meta: {
-                        title: '首页',
-                        code: 'ly-hone',
-                    },
-                    component: () => import('@/views/Home.vue'),
-                },
-                {
-                    path: 'demo',
-                    name: 'ly-demo',
-                    meta: {
-                        title: 'demo页',
-                        code: 'ly-demo',
-                    },
-                    component: () => import('@/views/demo.vue'),
-                },
-                {
-                    path: 'demo1',
-                    name: 'ly-demo1',
-                    meta: {
-                        title: 'demo1页',
-                        code: 'ly-demo1',
-                    },
-                    component: () => import('@/views/demo1.vue'),
-                },
-            ],
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: () => import('@/views/system/login/index.vue'),
-        },
-        {
-            path: '/403',
-            name: '403',
-            component: () => import('@/views/system/error/403.vue'),
-        },
-        {
-            path: '/:pathMatch(.*)*',
-            name: '404',
-            component: () => import('@/views/system/error/404.vue'),
-        },
-    ],
+    routes: [...staticRouters, ...dynamicRouters],
     history: createWebHistory(),
 })
-
-// 使用 Pinia 的 setup 模式 store
+// 全局路由守卫动态注入布局
+// const excludedRoutes = ['/login', '/403', '404'] // 排除的路由
+// // 使用 Pinia 的 setup 模式 store
 // router.beforeEach((to, from, next) => {
 //     const tabsStore = useTabsStore() // 获取 store
 //     if (to.meta.title) {
 //         tabsStore.addTab({ name: to.name as string, query: to.query }) // 路由切换时添加 tab
+//     }
+//     if (!excludedRoutes.includes(to.path)) {
 //     }
 //     next()
 // })

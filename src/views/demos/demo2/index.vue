@@ -1,4 +1,6 @@
-<template>我是demo2</template>
+<template>
+    <div>我是demo2</div>
+</template>
 <script setup lang="ts">
 defineOptions({ name: 'ly-demo2' })
 </script>
