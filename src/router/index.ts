@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import { useTabsStore } from '@/store/modules/tabs.ts'
 import staticRouters from '@/router/static.ts'
 import { dynamicRouters } from '@/router/dynamic.ts'
+import { getToken } from '@/utils/auth.ts'
 
 const router = createRouter({
     routes: [...staticRouters, ...dynamicRouters],
@@ -19,4 +20,20 @@ const router = createRouter({
 //     }
 //     next()
 // })
+
+router.beforeEach((to, from, next) => {
+    console.log('beforeEach', to, from, next)
+    console.info('🚀 ~ file:app.vue method:getToken() line: -----', getToken())
+    if (to.path === '/login') {
+        return next()
+    }
+    if (!getToken()) {
+        return next({ path: '/login', query: { redirect: to.fullPath } })
+    }
+    // // 重置路由
+    // else {
+    //     next({ path: '/login' })
+    // }
+    next()
+})
 export default router

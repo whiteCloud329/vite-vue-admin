@@ -11,6 +11,7 @@
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import LyLayout from '@/layout/index.vue'
+// import { getToken } from '@/utils/auth.ts'
 
 const route = useRoute()
 
@@ -18,5 +19,22 @@ const route = useRoute()
 const showLayout = computed(() => {
     return route.meta.layout !== false // 默认需要 Layout，只有明确标记 `layout: false` 时才不加载
 })
+
+// const router = useRouter()
+// router.beforeEach((to, from, next) => {
+//     console.log('beforeEach', to, from, next)
+//     console.info('🚀 ~ file:app.vue method:getToken() line: -----', getToken())
+//     if (to.path === '/login') {
+//         return next()
+//     }
+//     if (!getToken()) {
+//         return next({ path: '/login', query: { redirect: to.fullPath } })
+//     }
+//     // // 重置路由
+//     // else {
+//     //     next({ path: '/login' })
+//     // }
+//     next()
+// })
 </script>
 <style scoped></style>

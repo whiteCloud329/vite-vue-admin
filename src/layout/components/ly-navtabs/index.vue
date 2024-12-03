@@ -39,7 +39,11 @@
                         <el-scrollbar class="right-dropdown">
                             <el-dropdown-menu>
                                 <el-dropdown-item @click="closeAllTabs">
-                                    <div class="dropdown-item">关闭所有</div>
+                                    <div
+                                        class="dropdown-item dropdown-item-close-all"
+                                    >
+                                        关闭所有
+                                    </div>
                                 </el-dropdown-item>
                                 <template v-for="tab of tabs" :key="tab.path">
                                     <el-dropdown-item
@@ -103,6 +107,7 @@ const handleTabClick1 = (name: string) => {
 const removeTab = (name: string) => {
     tabsStore.removeTab(name)
 }
+const refreshPage = inject('refreshPage')
 // 打开右键菜单
 const onContextMenu = (e: MouseEvent, name: string) => {
     //prevent the browser's default menu
@@ -147,8 +152,6 @@ const onContextMenu = (e: MouseEvent, name: string) => {
         })
     }
 }
-
-const refreshPage = inject('refreshPage')
 
 // 关闭选中标签页
 const closeSelectedTab = (tab: TabType) => {
@@ -197,6 +200,10 @@ const closeAllTabs = () => {
         line-height: 32px;
         font-size: 14px;
         font-weight: bold;
+    }
+
+    .dropdown-item-close-all {
+        color: var(--fail-color);
     }
 
     .dropdown-item-close {
