@@ -13,7 +13,7 @@
                             <Folder />
                         </el-icon>
                         <div class="indent-16px">
-                            {{ item.name }}
+                            {{ item.title }}
                         </div>
                     </li>
                 </template>
@@ -39,7 +39,7 @@
                                     <el-icon class="inline">
                                         <Folder />
                                     </el-icon>
-                                    {{ item.name.slice(0, 2) }}
+                                    {{ item.title?.slice(0, 2) }}
                                 </div>
                             </el-menu-item>
                         </template>
@@ -47,7 +47,7 @@
                 </el-scrollbar>
             </div>
             <div class="main-right">
-                <div class="menu-header">{{ activeMenu.name }}</div>
+                <div class="menu-header">{{ activeMenu.title }}</div>
                 <el-menu
                     class="ly-normal-menu"
                     :default-active="String(activeMenu.id)"
@@ -118,7 +118,7 @@ watch(route, (val) => {
         return menu.path === '/' + firstSegment
     })
     const activeIndex = recursionMenu1(lastMenu?.parentId as number)
-    // console.log(activeIndex, 'lastMenu')
+    console.log(activeIndex, 'lastMenu')
     onMenuClick(activeIndex as MenuItemType)
 })
 

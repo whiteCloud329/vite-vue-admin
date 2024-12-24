@@ -62,11 +62,13 @@ export interface MenuItemType {
     parentId: number
     tenantId?: string | null
     name: string
-    path: string | null
-    code: string | null
+    path: string
+    title: string | null
+    code?: string | null
     component: string | null
     icon: string | null
     show: boolean
+    level: number | null
     // order: number | null
     type: number
     children?: MenuItemType[]

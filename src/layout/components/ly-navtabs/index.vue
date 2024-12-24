@@ -12,7 +12,6 @@
                 class="ly-nav-item"
                 v-for="tab in tabs"
                 :key="tab.name"
-                :label="tab.title"
                 :name="tab.name"
                 :closable="tab.name !== 'ly-home'"
             >
@@ -26,6 +25,27 @@
                     </div>
                 </template>
             </el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
+            <el-tab-pane name="1234">1223</el-tab-pane>
             <template #add-icon>
                 <el-dropdown
                     placement="bottom-end"
@@ -88,6 +108,7 @@ const activeTab = computed({
     get: () => tabsStore.activeTab,
     set: (val: string) => tabsStore.setActiveTab(val),
 })
+
 const tabs = computed(() => tabsStore.tabs)
 
 // 点击标签页时切换路由
@@ -178,6 +199,14 @@ const closeAllTabs = () => {
 
     :deep(.el-tabs) {
         height: 36px;
+
+        .el-tabs__nav-prev,
+        .el-tabs__nav-next {
+            border-radius: 8px;
+            line-height: 36px !important;
+            height: 36px !important;
+            background-color: #fbfbfb;
+        }
     }
 
     .ly-nav-list {
@@ -224,7 +253,7 @@ const closeAllTabs = () => {
     border: 0 !important;
 
     .el-tabs__item {
-        width: 180px;
+        width: 160px;
         line-height: 32px;
         height: 32px;
         color: #999;

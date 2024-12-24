@@ -20,7 +20,7 @@
     "@unocss/reset": "0.65.0-beta.2",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vueuse/core": "^12.0.0",
-    "element-plus": "https://pkg.pr.new/element-plus/element-plus@72c3ce1",
+    "element-plus": "^2.9.1",
     "js-cookie": "^3.0.5",
     "pinia": "^2.2.8",
     "pinia-plugin-persistedstate": "^4.1.3",

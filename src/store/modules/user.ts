@@ -18,13 +18,21 @@ export const useUserStore = defineStore('userStore', () => {
     const menuRoutes = ref<MenuItemType[]>([])
     // menus = ref<MenuItem[]>([])
     const getMenus = async () => {
-        const { data } = await getMenuList()
-        const { menuTree, buttonCodes } = buildTree(data)
-        menuRoutes.value = data
-        getRouterByMenus(data)
-        // menus.value = menuTree
-        menus.value = userInfo.menus = [...menuTree]
-        console.log(menuTree, buttonCodes, menus)
+        return new Promise((resolve, reject) => {
+            getMenuList()
+                .then(({ data }) => {
+                    const { menuTree, buttonCodes } = buildTree(data)
+                    menuRoutes.value = data
+                    getRouterByMenus(data)
+                    // menus.value = menuTree
+                    menus.value = userInfo.menus = [...menuTree]
+                    console.log(menuTree, buttonCodes, menus)
+                    resolve(true)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
+        })
     }
 
     function buildTree(data: MenuItemType[]) {
@@ -72,23 +80,24 @@ export const useUserStore = defineStore('userStore', () => {
             .filter((item: MenuItemType) => item.type === 2 && item.path)
             .forEach((item: MenuItemType) => {
                 const routeItem: RouteRecordRaw = {
-                    path: item.path as string,
-                    name: item.name as string,
-                    component: routerPath[item.path as string],
+                    path: item.path,
+                    name: item.name,
+                    component: routerPath[item.path],
                     meta: {
-                        title: item.name as string,
-                        icon: item.icon as string,
-                        code: item.code as string,
+                        title: item.title,
+                        icon: item.icon,
+                        code: item.code,
+                        level: item.level,
                     },
                 }
 
                 routerList.push(routeItem)
                 router.addRoute(routeItem)
-                routerMap[item.path as string] = item
+                routerMap[item.path] = item
                 // console.log(routeItem, router.getRoutes())
             })
 
-        // console.log(routerMap, routerList)
+        console.log(routerMap, routerList)
         return { routerMap, routerList }
     }
 

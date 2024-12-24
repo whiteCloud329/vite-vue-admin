@@ -5,7 +5,7 @@
             :index="String(item.id)"
         >
             <template #title>
-                {{ item.name }}
+                {{ item.title }}
             </template>
             <recursion-menu :menu="item.children"></recursion-menu>
         </el-sub-menu>
@@ -16,7 +16,7 @@
             @click="onMenuClick(item)"
         >
             <div>
-                {{ item.name }}
+                {{ item.title }}
             </div>
         </el-menu-item>
     </template>

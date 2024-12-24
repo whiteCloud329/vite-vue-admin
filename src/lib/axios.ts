@@ -121,7 +121,7 @@ instance.interceptors.response.use(
     },
 )
 
-export const get = (url: string, params: object) => {
+export const get = (url: string, params: object = {}) => {
     return instance.get(url, { params })
 }
 

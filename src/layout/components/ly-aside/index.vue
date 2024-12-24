@@ -49,7 +49,7 @@ const asideTheme = computed(() => {
     return themeMap[theme as ThemeKey] || lyAsideDefault
 })
 
-useUserStore().getMenus()
+// useUserStore().getMenus()
 
 const menuTree = computed(() => useUserStore().menus)
 console.log(menuTree)
