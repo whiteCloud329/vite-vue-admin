@@ -1,41 +1,36 @@
+<template>
+    <div class="hello-world">
+        <h1>{{ msg }}</h1>
+        <p>{{ description }}</p>
+    </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 
-defineProps<{ msg: string }>()
+defineOptions({
+    name: 'HelloWorld',
+})
 
-const count = ref(0)
+defineProps<{
+    msg: string
+}>()
+
+const description = ref('这是一个使用 Vue 3 + TypeScript + Vite 的项目')
 </script>
 
-<template>
-    <h1>{{ msg }}</h1>
+<style lang="scss" scoped>
+.hello-world {
+    text-align: center;
+    padding: 20px;
 
-    <div class="card">
-        <button type="button" @click="count++">count is {{ count }}</button>
-        <p>
-            Edit
-            <code>components/HelloWorld.vue</code> to test HMR
-        </p>
-    </div>
+    h1 {
+        color: var(--el-text-color-primary);
+        margin-bottom: 20px;
+    }
 
-    <p>
-        Check out
-        <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-            >create-vue</a
-        >, the official Vue + Vite starter
-    </p>
-    <p>
-        Learn more about IDE Support for Vue in the
-        <a
-            href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-            target="_blank"
-            >Vue Docs Scaling up Guide</a
-        >.
-    </p>
-    <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
-</template>
-
-<style scoped>
-.read-the-docs {
-    color: #888;
+    p {
+        color: var(--el-text-color-regular);
+    }
 }
 </style>

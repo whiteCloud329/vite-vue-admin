@@ -1,37 +1,14 @@
 import { createApp } from 'vue'
-
-import 'virtual:uno.css'
-import 'normalize.css'
-import './styles/index.css'
-import './styles/index.scss'
-
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import ContextMenu from '@imengyu/vue3-context-menu'
-import router from './router'
 import App from './App.vue'
+import router from './router'
+import store from './store'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 const app = createApp(App)
 
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-}
-app.use(ContextMenu)
+app.use(store)
 app.use(router)
-
-import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-
-const pinia = createPinia()
-// 数据持久化
-pinia.use(piniaPluginPersistedstate)
-
-// 因为状态管理使用的是setup的方式构建所以我们重写一个$reset并挂载到pinia中
-pinia.use(({ store }) => {
-    const initialState = JSON.parse(JSON.stringify(store.$state))
-    store.$reset = () => {
-        store.$patch(initialState)
-    }
-})
-app.use(pinia)
+app.use(ElementPlus)
 
 app.mount('#app')
